@@ -1,0 +1,295 @@
+<html>
+<head>
+<title>lab3_advanced_dml.sql</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #7a7e85;}
+.s1 { color: #bcbec4;}
+.s2 { color: #cf8e6d;}
+.s3 { color: #bcbec4;}
+.s4 { color: #2aacb8;}
+.s5 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+lab3_advanced_dml.sql</font>
+</center></td></tr></table>
+<pre><span class="s0">--Part A</span>
+<span class="s0">--CREATE DATABASE advanced_lab;</span>
+
+<span class="s2">CREATE TABLE </span><span class="s1">employees</span><span class="s3">(</span>
+    <span class="s1">emp_id </span><span class="s2">SERIAL PRIMARY KEY</span><span class="s3">,</span>
+    <span class="s1">first_name </span><span class="s2">VARCHAR</span><span class="s3">(</span><span class="s4">100</span><span class="s3">),</span>
+    <span class="s1">last_name </span><span class="s2">VARCHAR</span><span class="s3">(</span><span class="s4">100</span><span class="s3">),</span>
+    <span class="s1">department </span><span class="s2">VARCHAR</span><span class="s3">(</span><span class="s4">100</span><span class="s3">),</span>
+    <span class="s1">salary </span><span class="s2">INTEGER</span><span class="s3">,</span>
+    <span class="s1">hire_date </span><span class="s2">DATE</span><span class="s3">,</span>
+    <span class="s1">status </span><span class="s2">VARCHAR</span><span class="s3">(</span><span class="s4">20</span><span class="s3">) </span><span class="s2">DEFAULT </span><span class="s5">'Active'</span>
+<span class="s3">);</span>
+
+<span class="s2">CREATE TABLE </span><span class="s1">departments</span><span class="s3">(</span>
+    <span class="s1">dept_id     </span><span class="s2">SERIAL PRIMARY KEY</span><span class="s3">,</span>
+    <span class="s1">dept_name   </span><span class="s2">VARCHAR</span><span class="s3">(</span><span class="s4">100</span><span class="s3">),</span>
+    <span class="s1">budget      </span><span class="s2">INTEGER</span><span class="s3">,</span>
+    <span class="s1">manager_id  </span><span class="s2">INTEGER REFERENCES </span><span class="s1">employees</span><span class="s3">(</span><span class="s1">emp_id</span><span class="s3">)</span>
+<span class="s3">);</span>
+
+<span class="s2">CREATE TABLE </span><span class="s1">projects </span><span class="s3">(</span>
+    <span class="s1">project_id </span><span class="s2">SERIAL PRIMARY KEY</span><span class="s3">,</span>
+    <span class="s1">project_name </span><span class="s2">VARCHAR</span><span class="s3">(</span><span class="s4">100</span><span class="s3">),</span>
+    <span class="s1">dept_id </span><span class="s2">INTEGER references </span><span class="s1">departments</span><span class="s3">(</span><span class="s1">dept_id</span><span class="s3">),</span>
+    <span class="s1">start_date </span><span class="s2">DATE</span><span class="s3">,</span>
+    <span class="s1">end_date </span><span class="s2">DATE</span><span class="s3">,</span>
+    <span class="s1">budger </span><span class="s2">INTEGER</span>
+<span class="s0">--</span>
+
+<span class="s3">);</span>
+
+<span class="s0">--Part B</span>
+
+<span class="s2">INSERT INTO </span><span class="s1">employees </span><span class="s3">(</span><span class="s1">emp_id</span><span class="s3">,</span><span class="s1">first_name</span><span class="s3">,</span><span class="s1">last_name</span><span class="s3">,</span><span class="s1">department</span><span class="s3">) </span><span class="s2">VALUES</span>
+<span class="s3">(</span><span class="s4">1</span><span class="s3">, </span><span class="s5">'Alice'</span><span class="s3">,  </span><span class="s5">'Johnson'</span><span class="s3">,  </span><span class="s5">'HR'</span><span class="s3">),</span>
+<span class="s3">(</span><span class="s4">2</span><span class="s3">, </span><span class="s5">'Bob'</span><span class="s3">,    </span><span class="s5">'Smith'</span><span class="s3">,    </span><span class="s5">'IT'</span><span class="s3">),</span>
+<span class="s3">(</span><span class="s4">3</span><span class="s3">, </span><span class="s5">'Carla'</span><span class="s3">,  </span><span class="s5">'Martinez'</span><span class="s3">, </span><span class="s5">'Finance'</span><span class="s3">),</span>
+<span class="s3">(</span><span class="s4">4</span><span class="s3">, </span><span class="s5">'David'</span><span class="s3">,  </span><span class="s5">'Lee'</span><span class="s3">,      </span><span class="s5">'Engineering'</span><span class="s3">),</span>
+<span class="s3">(</span><span class="s4">5</span><span class="s3">, </span><span class="s5">'Evelyn'</span><span class="s3">, </span><span class="s5">'Khan'</span><span class="s3">,     </span><span class="s5">'Marketing'</span><span class="s3">);</span>
+
+<span class="s2">SELECT </span><span class="s1">setval</span><span class="s3">(</span>
+    <span class="s1">pg_get_serial_sequence</span><span class="s3">(</span><span class="s5">'employees'</span><span class="s3">, </span><span class="s5">'emp_id'</span><span class="s3">),</span>
+    <span class="s2">COALESCE</span><span class="s3">((</span><span class="s2">SELECT </span><span class="s1">MAX</span><span class="s3">(</span><span class="s1">emp_id</span><span class="s3">) </span><span class="s2">FROM </span><span class="s1">employees</span><span class="s3">), </span><span class="s4">0</span><span class="s3">) </span><span class="s1">+ </span><span class="s4">1</span><span class="s3">,</span>
+    <span class="s2">false</span>
+<span class="s3">);</span>
+
+
+<span class="s2">INSERT INTO </span><span class="s1">employees </span><span class="s3">(</span><span class="s1">first_name</span><span class="s3">, </span><span class="s1">last_name</span><span class="s3">, </span><span class="s1">department</span><span class="s3">, </span><span class="s1">salary</span><span class="s3">,</span><span class="s1">status</span><span class="s3">) </span><span class="s2">VALUES</span>
+<span class="s3">(</span><span class="s5">'Maria'</span><span class="s3">, </span><span class="s5">'Petrova'</span><span class="s3">, </span><span class="s5">'Finance'</span><span class="s3">, </span><span class="s2">DEFAULT</span><span class="s3">, </span><span class="s2">DEFAULT</span><span class="s3">);</span>
+
+<span class="s2">INSERT INTO </span><span class="s1">departments </span><span class="s3">(</span><span class="s1">dept_name</span><span class="s3">, </span><span class="s1">budget</span><span class="s3">, </span><span class="s1">manager_id</span><span class="s3">)</span>
+<span class="s2">VALUES</span>
+    <span class="s3">(</span><span class="s5">'Human Resources'</span><span class="s3">, </span><span class="s4">120000</span><span class="s3">, </span><span class="s4">1</span><span class="s3">),</span>
+    <span class="s3">(</span><span class="s5">'Information Technology'</span><span class="s3">, </span><span class="s4">200000</span><span class="s3">, </span><span class="s4">2</span><span class="s3">),</span>
+    <span class="s3">(</span><span class="s5">'Finance'</span><span class="s3">, </span><span class="s4">180000</span><span class="s3">, </span><span class="s4">3</span><span class="s3">);</span>
+
+<span class="s2">INSERT INTO </span><span class="s1">employees </span><span class="s3">(</span><span class="s1">first_name</span><span class="s3">,</span><span class="s1">last_name</span><span class="s3">,</span><span class="s1">department</span><span class="s3">,</span><span class="s1">hire_date</span><span class="s3">,</span><span class="s1">salary</span><span class="s3">) </span><span class="s2">VALUES</span>
+<span class="s3">(</span><span class="s5">'Alice'</span><span class="s3">, </span><span class="s5">'Johnson'</span><span class="s3">, </span><span class="s5">'HR'</span><span class="s3">, </span><span class="s2">current_date</span><span class="s3">, </span><span class="s4">50000 </span><span class="s1">* </span><span class="s4">1.1</span><span class="s3">);</span>
+
+
+<span class="s2">CREATE TABLE </span><span class="s1">temp_employees </span><span class="s3">(</span>
+    <span class="s1">emp_id </span><span class="s2">SERIAL PRIMARY KEY</span><span class="s3">,</span>
+    <span class="s1">first_name </span><span class="s2">VARCHAR</span><span class="s3">(</span><span class="s4">100</span><span class="s3">),</span>
+    <span class="s1">last_name </span><span class="s2">VARCHAR</span><span class="s3">(</span><span class="s4">100</span><span class="s3">),</span>
+    <span class="s1">department </span><span class="s2">VARCHAR</span><span class="s3">(</span><span class="s4">100</span><span class="s3">),</span>
+    <span class="s1">salary </span><span class="s2">INTEGER</span><span class="s3">,</span>
+    <span class="s1">hire_date </span><span class="s2">DATE</span><span class="s3">,</span>
+    <span class="s1">status </span><span class="s2">VARCHAR</span><span class="s3">(</span><span class="s4">20</span><span class="s3">) </span><span class="s2">DEFAULT </span><span class="s5">'Active'</span>
+<span class="s3">);</span>
+
+<span class="s2">INSERT INTO </span><span class="s1">temp_employees </span><span class="s3">(</span><span class="s1">first_name</span><span class="s3">, </span><span class="s1">last_name</span><span class="s3">, </span><span class="s1">department</span><span class="s3">, </span><span class="s1">salary</span><span class="s3">, </span><span class="s1">hire_date</span><span class="s3">, </span><span class="s1">status</span><span class="s3">)</span>
+<span class="s2">SELECT </span><span class="s1">first_name</span><span class="s3">,</span>
+       <span class="s1">last_name</span><span class="s3">,</span>
+       <span class="s1">department</span><span class="s3">,</span>
+       <span class="s1">salary</span><span class="s3">,</span>
+       <span class="s1">hire_date</span><span class="s3">,</span>
+       <span class="s1">status</span>
+<span class="s2">FROM </span><span class="s1">employees </span><span class="s2">WHERE </span><span class="s1">department = </span><span class="s5">'IT'</span><span class="s3">;</span>
+
+<span class="s0">--Part C</span>
+
+<span class="s2">UPDATE </span><span class="s1">employees</span>
+<span class="s2">SET </span><span class="s1">salary = </span><span class="s2">CASE </span><span class="s1">department</span>
+    <span class="s2">WHEN </span><span class="s5">'HR'          </span><span class="s2">THEN </span><span class="s4">55000</span>
+    <span class="s2">WHEN </span><span class="s5">'IT'          </span><span class="s2">THEN </span><span class="s4">60000</span>
+    <span class="s2">WHEN </span><span class="s5">'Finance'     </span><span class="s2">THEN </span><span class="s4">65000</span>
+    <span class="s2">WHEN </span><span class="s5">'Engineering' </span><span class="s2">THEN </span><span class="s4">70000</span>
+    <span class="s2">WHEN </span><span class="s5">'Marketing'   </span><span class="s2">THEN </span><span class="s4">62000</span>
+    <span class="s2">ELSE </span><span class="s1">salary</span>
+<span class="s2">END</span>
+<span class="s2">WHERE </span><span class="s1">department </span><span class="s2">IS NOT NULL</span><span class="s3">;</span>
+
+<span class="s2">UPDATE </span><span class="s1">employees </span><span class="s2">SET </span><span class="s1">salary = salary * </span><span class="s4">1.10</span>
+<span class="s2">WHERE </span><span class="s1">salary </span><span class="s2">notnull</span><span class="s3">;</span>
+
+<span class="s2">UPDATE </span><span class="s1">employees </span><span class="s2">SET </span><span class="s1">hire_date = now</span><span class="s3">() </span><span class="s2">WHERE </span><span class="s1">hire_date </span><span class="s2">is not null </span><span class="s3">;</span>
+<span class="s2">UPDATE </span><span class="s1">employees</span>
+<span class="s2">SET </span><span class="s1">hire_date = </span><span class="s2">DATE </span><span class="s5">'2020-01-01'</span>
+<span class="s2">WHERE </span><span class="s1">emp_id = </span><span class="s4">3</span><span class="s3">;</span>
+
+
+<span class="s0">--8</span>
+<span class="s2">UPDATE </span><span class="s1">employees </span><span class="s2">SET </span><span class="s1">status = </span><span class="s5">'Senior' </span><span class="s2">WHERE </span><span class="s1">salary &gt; </span><span class="s4">60000 </span><span class="s2">AND </span><span class="s1">hire_date &lt;= </span><span class="s5">'2020-01-01'</span><span class="s3">;</span>
+
+<span class="s0">--9</span>
+<span class="s2">UPDATE </span><span class="s1">employees</span>
+<span class="s2">SET </span><span class="s1">department = </span><span class="s2">CASE</span>
+    <span class="s2">WHEN </span><span class="s1">salary &gt; </span><span class="s4">80000 </span><span class="s2">THEN </span><span class="s5">'Management'</span>
+    <span class="s2">WHEN </span><span class="s1">salary </span><span class="s2">BETWEEN </span><span class="s4">50000 </span><span class="s2">AND </span><span class="s4">80000 </span><span class="s2">THEN </span><span class="s5">'Senior'</span>
+    <span class="s2">ELSE </span><span class="s5">'Junior'</span>
+<span class="s2">END</span>
+<span class="s2">WHERE </span><span class="s1">department </span><span class="s2">IS DISTINCT FROM</span>
+      <span class="s2">CASE</span>
+          <span class="s2">WHEN </span><span class="s1">salary &gt; </span><span class="s4">80000 </span><span class="s2">THEN </span><span class="s5">'Management'</span>
+          <span class="s2">WHEN </span><span class="s1">salary </span><span class="s2">BETWEEN </span><span class="s4">50000 </span><span class="s2">AND </span><span class="s4">80000 </span><span class="s2">THEN </span><span class="s5">'Senior'</span>
+          <span class="s2">ELSE </span><span class="s5">'Junior'</span>
+      <span class="s2">END</span><span class="s3">;</span>
+<span class="s0">--10</span>
+<span class="s2">UPDATE </span><span class="s1">employees</span>
+<span class="s2">SET </span><span class="s1">department = </span><span class="s2">DEFAULT</span>
+<span class="s2">WHERE </span><span class="s1">status = </span><span class="s5">'Inactive'</span><span class="s3">;</span>
+
+<span class="s0">--11</span>
+<span class="s2">UPDATE </span><span class="s1">departments </span><span class="s2">d</span>
+<span class="s2">SET </span><span class="s1">budget = </span><span class="s3">(</span>
+    <span class="s2">SELECT </span><span class="s1">AVG</span><span class="s3">(</span><span class="s1">e</span><span class="s3">.</span><span class="s1">salary</span><span class="s3">) </span><span class="s1">* </span><span class="s4">1.2</span>
+    <span class="s2">FROM </span><span class="s1">employees e</span>
+    <span class="s2">WHERE </span><span class="s1">e</span><span class="s3">.</span><span class="s1">emp_id = </span><span class="s2">d</span><span class="s3">.</span><span class="s1">dept_id</span>
+<span class="s3">);</span>
+
+<span class="s0">--12</span>
+<span class="s2">UPDATE </span><span class="s1">employees</span>
+<span class="s2">SET </span><span class="s1">salary = salary * </span><span class="s4">1.15</span><span class="s3">,</span>
+    <span class="s1">status = </span><span class="s5">'Promoted'</span>
+<span class="s2">WHERE </span><span class="s1">department = </span><span class="s5">'Sales'</span><span class="s3">;</span>
+
+<span class="s0">--13</span>
+<span class="s2">DELETE FROM </span><span class="s1">employees</span>
+<span class="s2">WHERE </span><span class="s1">status = </span><span class="s5">'Terminated'</span><span class="s3">;</span>
+
+<span class="s0">--14</span>
+<span class="s2">DELETE FROM </span><span class="s1">employees</span>
+<span class="s2">WHERE </span><span class="s1">salary &lt; </span><span class="s4">40000</span>
+  <span class="s2">AND </span><span class="s1">hire_date &gt; </span><span class="s5">'2023-01-01'</span>
+  <span class="s2">AND </span><span class="s1">department </span><span class="s2">IS NULL</span><span class="s3">;</span>
+
+<span class="s0">--15</span>
+<span class="s2">DELETE FROM </span><span class="s1">departments </span><span class="s2">d</span>
+<span class="s2">WHERE d</span><span class="s3">.</span><span class="s1">dept_name </span><span class="s2">NOT IN </span><span class="s3">(</span>
+    <span class="s2">SELECT DISTINCT </span><span class="s1">e</span><span class="s3">.</span><span class="s1">department</span>
+    <span class="s2">FROM </span><span class="s1">employees e</span>
+    <span class="s2">WHERE </span><span class="s1">e</span><span class="s3">.</span><span class="s1">department </span><span class="s2">IS NOT NULL</span>
+
+    <span class="s3">);</span>
+
+<span class="s0">--16</span>
+<span class="s2">DELETE FROM </span><span class="s1">projects</span>
+<span class="s2">WHERE </span><span class="s1">end_date &lt; </span><span class="s5">'2023-01-01'</span>
+<span class="s2">RETURNING </span><span class="s1">*</span><span class="s3">;</span>
+
+<span class="s0">--17</span>
+<span class="s2">INSERT INTO </span><span class="s1">employees </span><span class="s3">(</span><span class="s1">first_name</span><span class="s3">, </span><span class="s1">last_name</span><span class="s3">, </span><span class="s1">department</span><span class="s3">, </span><span class="s1">salary</span><span class="s3">, </span><span class="s1">hire_date</span><span class="s3">)</span>
+<span class="s2">VALUES </span><span class="s3">(</span><span class="s5">'John'</span><span class="s3">, </span><span class="s5">'Doe'</span><span class="s3">, </span><span class="s2">NULL</span><span class="s3">, </span><span class="s2">NULL</span><span class="s3">, </span><span class="s5">'2025-09-30'</span><span class="s3">);</span>
+
+<span class="s0">--18</span>
+<span class="s2">UPDATE </span><span class="s1">employees</span>
+<span class="s2">SET </span><span class="s1">department = </span><span class="s5">'Unassigned'</span>
+<span class="s2">WHERE </span><span class="s1">department </span><span class="s2">IS NULL</span><span class="s3">;</span>
+
+<span class="s0">--19</span>
+<span class="s2">DELETE FROM </span><span class="s1">employees</span>
+<span class="s2">WHERE </span><span class="s1">salary </span><span class="s2">IS NULL</span>
+   <span class="s2">OR </span><span class="s1">department </span><span class="s2">IS NULL</span><span class="s3">;</span>
+
+<span class="s0">--20</span>
+<span class="s2">INSERT INTO </span><span class="s1">employees </span><span class="s3">(</span><span class="s1">first_name</span><span class="s3">, </span><span class="s1">last_name</span><span class="s3">, </span><span class="s1">department</span><span class="s3">, </span><span class="s1">salary</span><span class="s3">, </span><span class="s1">hire_date</span><span class="s3">)</span>
+<span class="s2">VALUES </span><span class="s3">(</span><span class="s5">'John'</span><span class="s3">, </span><span class="s5">'Doe'</span><span class="s3">, </span><span class="s5">'Sales'</span><span class="s3">, </span><span class="s4">55000</span><span class="s3">, </span><span class="s2">CURRENT_DATE</span><span class="s3">)</span>
+<span class="s2">RETURNING </span><span class="s1">emp_id</span><span class="s3">, </span><span class="s1">first_name || </span><span class="s5">' ' </span><span class="s1">|| last_name </span><span class="s2">AS </span><span class="s1">full_name</span><span class="s3">;</span>
+
+<span class="s0">--21</span>
+<span class="s2">UPDATE </span><span class="s1">employees</span>
+<span class="s2">SET </span><span class="s1">salary = salary + </span><span class="s4">5000</span>
+<span class="s2">WHERE </span><span class="s1">department = </span><span class="s5">'IT'</span>
+<span class="s2">RETURNING </span><span class="s1">emp_id</span><span class="s3">, (</span><span class="s1">salary - </span><span class="s4">5000</span><span class="s3">) </span><span class="s2">AS </span><span class="s1">old_salary</span><span class="s3">, </span><span class="s1">salary </span><span class="s2">AS </span><span class="s1">new_salary</span><span class="s3">;</span>
+
+<span class="s0">--22</span>
+<span class="s2">DELETE FROM </span><span class="s1">employees</span>
+<span class="s2">WHERE </span><span class="s1">hire_date &lt; </span><span class="s5">'2020-01-01'</span>
+<span class="s2">RETURNING </span><span class="s1">*</span><span class="s3">;</span>
+
+<span class="s0">--23</span>
+<span class="s2">INSERT INTO </span><span class="s1">employees </span><span class="s3">(</span><span class="s1">first_name</span><span class="s3">, </span><span class="s1">last_name</span><span class="s3">, </span><span class="s1">department</span><span class="s3">, </span><span class="s1">salary</span><span class="s3">, </span><span class="s1">hire_date</span><span class="s3">)</span>
+<span class="s2">SELECT </span><span class="s5">'John'</span><span class="s3">, </span><span class="s5">'Doe'</span><span class="s3">, </span><span class="s5">'IT'</span><span class="s3">, </span><span class="s4">60000</span><span class="s3">, </span><span class="s2">CURRENT_DATE</span>
+<span class="s2">WHERE NOT EXISTS </span><span class="s3">(</span>
+    <span class="s2">SELECT </span><span class="s4">1</span>
+    <span class="s2">FROM </span><span class="s1">employees</span>
+    <span class="s2">WHERE </span><span class="s1">first_name = </span><span class="s5">'John'</span>
+      <span class="s2">AND </span><span class="s1">last_name = </span><span class="s5">'Doe'</span>
+<span class="s3">);</span>
+
+<span class="s0">--24</span>
+<span class="s2">UPDATE </span><span class="s1">employees e</span>
+<span class="s2">SET </span><span class="s1">salary = salary *</span>
+    <span class="s2">CASE</span>
+        <span class="s2">WHEN d</span><span class="s3">.</span><span class="s1">budget &gt; </span><span class="s4">100000 </span><span class="s2">THEN </span><span class="s4">1.10</span>
+        <span class="s2">ELSE </span><span class="s4">1.05</span>
+    <span class="s2">END</span>
+<span class="s2">FROM </span><span class="s1">departments </span><span class="s2">d</span>
+<span class="s2">WHERE </span><span class="s1">e</span><span class="s3">.</span><span class="s1">department = </span><span class="s2">d</span><span class="s3">.</span><span class="s1">dept_name</span><span class="s3">;</span>
+
+<span class="s0">--25</span>
+<span class="s2">WITH </span><span class="s1">inserted </span><span class="s2">AS </span><span class="s3">(</span>
+    <span class="s2">INSERT INTO </span><span class="s1">employees </span><span class="s3">(</span><span class="s1">first_name</span><span class="s3">, </span><span class="s1">last_name</span><span class="s3">, </span><span class="s1">department</span><span class="s3">, </span><span class="s1">salary</span><span class="s3">, </span><span class="s1">hire_date</span><span class="s3">)</span>
+    <span class="s2">VALUES</span>
+      <span class="s3">(</span><span class="s5">'Alice'</span><span class="s3">,  </span><span class="s5">'Brown'</span><span class="s3">,   </span><span class="s5">'IT'</span><span class="s3">,       </span><span class="s4">60000</span><span class="s3">, </span><span class="s2">CURRENT_DATE</span><span class="s3">),</span>
+      <span class="s3">(</span><span class="s5">'Bob'</span><span class="s3">,    </span><span class="s5">'Smith'</span><span class="s3">,   </span><span class="s5">'Sales'</span><span class="s3">,    </span><span class="s4">50000</span><span class="s3">, </span><span class="s2">CURRENT_DATE</span><span class="s3">),</span>
+      <span class="s3">(</span><span class="s5">'Charlie'</span><span class="s3">,</span><span class="s5">'Davis'</span><span class="s3">,   </span><span class="s5">'HR'</span><span class="s3">,       </span><span class="s4">45000</span><span class="s3">, </span><span class="s2">CURRENT_DATE</span><span class="s3">),</span>
+      <span class="s3">(</span><span class="s5">'Diana'</span><span class="s3">,  </span><span class="s5">'Miller'</span><span class="s3">,  </span><span class="s5">'Finance'</span><span class="s3">,  </span><span class="s4">70000</span><span class="s3">, </span><span class="s2">CURRENT_DATE</span><span class="s3">),</span>
+      <span class="s3">(</span><span class="s5">'Ethan'</span><span class="s3">,  </span><span class="s5">'Wilson'</span><span class="s3">,  </span><span class="s5">'IT'</span><span class="s3">,       </span><span class="s4">55000</span><span class="s3">, </span><span class="s2">CURRENT_DATE</span><span class="s3">)</span>
+    <span class="s2">RETURNING </span><span class="s1">emp_id</span>
+<span class="s3">)</span>
+<span class="s2">UPDATE </span><span class="s1">employees e</span>
+<span class="s2">SET </span><span class="s1">salary = salary * </span><span class="s4">1.10</span>
+<span class="s2">WHERE </span><span class="s1">e</span><span class="s3">.</span><span class="s1">emp_id </span><span class="s2">IN </span><span class="s3">(</span><span class="s2">SELECT </span><span class="s1">emp_id </span><span class="s2">FROM </span><span class="s1">inserted</span><span class="s3">)</span>
+<span class="s2">RETURNING </span><span class="s1">e</span><span class="s3">.</span><span class="s1">emp_id</span><span class="s3">, </span><span class="s1">e</span><span class="s3">.</span><span class="s1">salary</span><span class="s3">;</span>
+
+<span class="s0">--26</span>
+<span class="s2">CREATE TABLE </span><span class="s1">employee_archive </span><span class="s3">(</span>
+    <span class="s1">emp_id      </span><span class="s2">INTEGER PRIMARY KEY</span><span class="s3">,</span>
+    <span class="s1">first_name  </span><span class="s2">VARCHAR</span><span class="s3">(</span><span class="s4">100</span><span class="s3">),</span>
+    <span class="s1">last_name   </span><span class="s2">VARCHAR</span><span class="s3">(</span><span class="s4">100</span><span class="s3">),</span>
+    <span class="s1">department  </span><span class="s2">VARCHAR</span><span class="s3">(</span><span class="s4">100</span><span class="s3">),</span>
+    <span class="s1">salary      </span><span class="s2">INTEGER</span><span class="s3">,</span>
+    <span class="s1">hire_date   </span><span class="s2">DATE</span><span class="s3">,</span>
+    <span class="s1">status      </span><span class="s2">VARCHAR</span><span class="s3">(</span><span class="s4">20</span><span class="s3">)</span>
+<span class="s3">);</span>
+
+<span class="s2">INSERT INTO </span><span class="s1">employee_archive </span><span class="s3">(</span><span class="s1">emp_id</span><span class="s3">, </span><span class="s1">first_name</span><span class="s3">, </span><span class="s1">last_name</span><span class="s3">, </span><span class="s1">department</span><span class="s3">, </span><span class="s1">salary</span><span class="s3">, </span><span class="s1">hire_date</span><span class="s3">, </span><span class="s1">status</span><span class="s3">)</span>
+<span class="s2">SELECT </span><span class="s1">emp_id</span><span class="s3">, </span><span class="s1">first_name</span><span class="s3">, </span><span class="s1">last_name</span><span class="s3">, </span><span class="s1">department</span><span class="s3">, </span><span class="s1">salary</span><span class="s3">, </span><span class="s1">hire_date</span><span class="s3">, </span><span class="s1">status</span>
+<span class="s2">FROM </span><span class="s1">employees</span>
+<span class="s2">WHERE </span><span class="s1">status = </span><span class="s5">'Inactive'</span><span class="s3">;</span>
+
+<span class="s2">DELETE FROM </span><span class="s1">employees</span>
+<span class="s2">WHERE </span><span class="s1">status = </span><span class="s5">'Inactive'</span><span class="s3">;</span>
+
+<span class="s0">--27</span>
+<span class="s2">UPDATE </span><span class="s1">projects p</span>
+<span class="s2">SET </span><span class="s1">end_date = p</span><span class="s3">.</span><span class="s1">end_date + </span><span class="s2">INTERVAL </span><span class="s5">'30 days'</span>
+<span class="s2">WHERE </span><span class="s1">p</span><span class="s3">.</span><span class="s1">budger &gt; </span><span class="s4">50000</span>
+  <span class="s2">AND </span><span class="s1">p</span><span class="s3">.</span><span class="s1">dept_id </span><span class="s2">IN </span><span class="s3">(</span>
+        <span class="s2">SELECT d</span><span class="s3">.</span><span class="s1">dept_id</span>
+        <span class="s2">FROM </span><span class="s1">departments </span><span class="s2">d</span>
+        <span class="s2">JOIN </span><span class="s1">employees e </span><span class="s2">ON </span><span class="s1">e</span><span class="s3">.</span><span class="s1">department = </span><span class="s2">d</span><span class="s3">.</span><span class="s1">dept_name</span>
+        <span class="s2">GROUP BY d</span><span class="s3">.</span><span class="s1">dept_id</span>
+        <span class="s2">HAVING </span><span class="s1">COUNT</span><span class="s3">(</span><span class="s1">*</span><span class="s3">) </span><span class="s1">&gt; </span><span class="s4">3</span>
+  <span class="s3">)</span>
+  <span class="s2">AND </span><span class="s1">p</span><span class="s3">.</span><span class="s1">end_date </span><span class="s2">IS NOT NULL</span>
+<span class="s2">RETURNING </span><span class="s1">p</span><span class="s3">.</span><span class="s1">project_id</span><span class="s3">, </span><span class="s1">p</span><span class="s3">.</span><span class="s1">project_name</span><span class="s3">, </span><span class="s1">p</span><span class="s3">.</span><span class="s1">end_date</span><span class="s3">;</span>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</body>
+</html>
